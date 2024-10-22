@@ -4,68 +4,73 @@
 
 int n=4;
 int dp[16][4];
+int path[16][4];
 int dist[10][10]={
-    {0, 20, 42, 25},
-    {20, 0, 30, 34},
-    {42, 30, 0, 10},
-    {25, 34, 10, 0}
+{0,20,42,25},
+{20,0,30,34},
+{42,30,0,10},
+{25,34,10,0}
 };
-int path[16][4];  // Array to store the path for each state
 
-// Function to find the minimum cost path using Dynamic Programming and Bitmasking
-int tsp(int mask, int pos) {
-    if (mask == (1 << n) - 1)  // All cities have been visited
-        return dist[pos][0];    // Return to starting city
+int tsp(int mask, int pos)
+{
 
-    int ans = INT_MAX;
+if(mask==(1<<n)-1)
+return dist[pos][0];
 
-    if (dp[mask][pos] != -1)
-        return dp[mask][pos];
+int ans=INT_MAX;
 
-    // Try visiting every other city
-    for (int city = 0; city < n; city++) {
-        if ((mask & (1 << city)) == 0) {  // If the city has not been visited
-            int newAns = dist[pos][city] + tsp(mask | (1 << city), city);
+if(dp[mask][pos]!=-1)
+return dp[mask][pos];
 
-            if (newAns < ans) {
-                ans = newAns;
-                path[mask][pos] = city;  // Store the next city in the optimal path
-            }
-        }
-    }
+for(int city=0;city<n;city++)
 
-    return dp[mask][pos] = ans;
+{
+	if((mask & (1<<city))==0)
+	{
+	int newAns= dist[pos][city] + tsp((mask|(1<<city)),city);
+	if(newAns<ans)
+	ans=newAns;
+	path[mask][pos]=city;
+	}
 }
 
-// Function to print the optimal path
-void printPath() {
-    int mask = 1, pos = 0;
-    printf("Path: 0 -> ");  // Start from city 0
-
-    // Traverse the path array to print the cities
-    for (int i = 0; i < n - 1; i++) {
-        int nextCity = path[mask][pos];
-        printf("%d -> ", nextCity);
-        mask |= (1 << nextCity);  // Mark the city as visited
-        pos = nextCity;           // Move to the next city
-    }
-
-    printf("0\n");  // Finally return to the starting city
+return dp[mask][pos]=ans;
 }
 
-int main() {
-    // Initialize dp array to -1
-    for (int i = 0; i < (1 << n); i++) {
-        for (int j = 0; j < n; j++) {
-            dp[i][j] = -1;
-        }
-    }
 
-    // Call the tsp function to find the shortest path
-    printf("Shortest path cost is %d\n", tsp(1, 0));
+void result(int mask ,int pos)
+{
 
-    // Print the path
-    printPath();
+printf("0->");
 
-    return 0;
+for(int i=0;i<n-1;i++)
+{
+int nextcity=path[mask][pos];
+printf("%d->",nextcity);
+mask |= (1<<nextcity);
+pos=nextcity;
+
+}
+
+
+printf("0\n");
+
+}
+
+
+int main()
+{
+	for(int i=0;i<16;i++)
+	{
+		for(int j=0;j<4;j++)
+		{
+		dp[i][j]=-1;
+		}
+	}
+
+printf("shortest path is %d\n",tsp(1,0));
+result(1,0);
+return 0;
+
 }
